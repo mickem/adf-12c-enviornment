@@ -84,11 +84,11 @@ class oracle_jdev::hr_schema inherits oracle_jdev::config {
 		group	=> "dba",
 	}
 	exec { "unlock_hr":
-		command		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus \"sys as sysdba\" @scripts/unlock_hr.sql",
+		command		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus -S -L \"sys/$hrPassword as sysdba\" @/u01/app/oracle/scripts/unlock_hr.sql",
 		user		=> "oracle",
 		environment	=> ["ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe"],
 		require		=> [File["/u01/app/oracle/scripts/unlock_hr.sql"], File["/u01/app/oracle/scripts/exit.sql"]],
-		unless		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus hr/$hrPassword @scripts/exit.sql",
+		unless		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus -S -L hr/$hrPassword @/u01/app/oracle/scripts/exit.sql",
 	}
 
 }
