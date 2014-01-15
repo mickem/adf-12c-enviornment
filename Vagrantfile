@@ -9,7 +9,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "adf-env"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
   config.vm.hostname = "adfenv.temp.medin.name"
+  config.vm.synced_folder "files", "/etc/puppet/files"
 
+  config.ssh.forward_agent = true
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "4096"]
@@ -22,8 +24,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puppet.manifest_file  = "base.pp"
   end
 
-  #config.vm.provision "shell", inline: "su - vagrant -c ./build.sh"
-
-  config.vm.synced_folder "files", "/etc/puppet/files"
-  config.ssh.forward_agent = true
 end

@@ -16,8 +16,8 @@ group { "oracle":
 	ensure		=> present,
 }
 
-exec{"restart-lightdm":
-	command => "/etc/init.d/lightdm restart; /usr/bin/touch /etc/puppet/.lightdm",
+exec { "restart-lightdm":
+	command => "/usr/bin/apt-get install linux-headers-$(uname -r); /etc/init.d/lightdm restart; /usr/bin/touch /etc/puppet/.lightdm",
 	creates => "/etc/puppet/.lightdm",
 	subscribe => Package['ubuntu-desktop'],
 }
