@@ -25,9 +25,9 @@ exec { "restart-lightdm":
 user { "oracle":
 	ensure		=> present,
 	comment		=> "$my_full_name",
-	gid			=> "oracle",
-	groups		=> ["admin", "sudo", "dba"],
-	membership	=> minimum,
+	gid			=> "dba",
+	groups		=> ["admin", "sudo", "oracle"],
+#	membership	=> minimum,
 	shell		=> "/bin/bash",
 	home		=> "/u01/app/oracle",
 	# So that we let Oracle installer create the group

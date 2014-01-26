@@ -59,35 +59,42 @@ class oracle_jdev::hr_schema inherits oracle_jdev::config {
 		ensure  => directory,
 		owner	=> "oracle",
 		group	=> "dba",
+		require	=> Service["oracle-xe"],
 	}
 	file { "/u01/app/oracle/.jdeveloper/system12.1.2.0.40.66.68/o.jdeveloper.rescat2.model/connections/connections.xml":
 		ensure	=> present,
 		content	=> template("oracle_jdev/connections.xml.erb"),
 		owner	=> "oracle",
 		group	=> "dba",
+		require	=> Service["oracle-xe"],
 	}
 	file { "/u01/app/oracle/scripts":
 		ensure  => directory,
 		owner	=> "oracle",
 		group	=> "dba",
+		require	=> Service["oracle-xe"],
 	}
 	 file { "/u01/app/oracle/scripts/unlock_hr.sql":
 		ensure	=> present,
 		content	=> template("oracle_jdev/unlock_hr.sql.erb"),
 		owner	=> "oracle",
 		group	=> "dba",
+		require	=> Service["oracle-xe"],
 	}
 	 file { "/u01/app/oracle/scripts/exit.sql":
 		ensure	=> present,
 		source	=> "puppet:///modules/oracle_jdev/exit.sql",
 		owner	=> "oracle",
 		group	=> "dba",
+		require	=> Service["oracle-xe"],
 	}
 	exec { "unlock_hr":
 		command		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus -S -L \"sys/$hrPassword as sysdba\" @/u01/app/oracle/scripts/unlock_hr.sql",
 		user		=> "oracle",
-		environment	=> ["ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe"],
-		require		=> [File["/u01/app/oracle/scripts/unlock_hr.sql"], File["/u01/app/oracle/scripts/exit.sql"]],
+		logoutput => true,
+		environment	=> ["ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe", "ORACLE_SID=XE", "ORACLE_BASE=/u01/app/oracle"
+],
+		require		=> [File["/u01/app/oracle/scripts/unlock_hr.sql"], File["/u01/app/oracle/scripts/exit.sql"], Service["oracle-xe"]],
 		unless		=> "/u01/app/oracle/product/11.2.0/xe/bin/sqlplus -S -L hr/$hrPassword @/u01/app/oracle/scripts/exit.sql",
 	}
 
